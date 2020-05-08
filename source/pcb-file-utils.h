@@ -333,6 +333,7 @@ void output_file_heading()
 //
 void begin_gcode(real spindle_speed)
 {
+	out(BEG_PROGRAM);
 	out(get_mode());
 
 	out(ABSOLUTE_MODE);

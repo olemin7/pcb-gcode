@@ -3,8 +3,8 @@
 // Often used options are at the top of the file.
 // Copied to gcode-defaults.h by the setup program.
 //
-// author=Timo Birnschein
-// description=Compatible with GRBL for NuggetMill5 (MEGA256 + RAMPS1.4)
+// author=ominenko
+// description=Tries to be very compatible
 //
 
 int FILENAMES_8_CHARACTERS = NO;
@@ -12,16 +12,16 @@ int FILENAMES_8_CHARACTERS = NO;
 //
 // Comments.
 //
-string COMMENT_BEGIN  = "(";
-string COMMENT_END    = ")";
+string COMMENT_BEGIN  = ";";
+string COMMENT_END    = "";
 
 // 
 // Format strings for coordinates, etc.
 //
 string EOL        = "\n";				  		/* standard line ending */
 string PARAM      = "P";							/* some use P, some # for parameters */
-string FORMAT     = "%-6.6f ";        /* coordinate format */
-string FR_FORMAT  = "F%-5.0f "; 	    /* feedrate format */
+string FORMAT     = "%-6.4f ";        /* coordinate format */
+string FR_FORMAT  = "F%-5.2f "; 	    /* feedrate format */
 string IJ_FORMAT  = "I" + FORMAT + "J" + FORMAT;
 string R_FORMAT   = "R" + FORMAT;
 
@@ -39,27 +39,25 @@ string ABSOLUTE_MODE        = COMMENT_BEGIN + "Absolute Coordinates" + COMMENT_E
 //
 // G codes
 //
-string RAPID    = "G0 ";
+string RAPID    = "G0 F360 ";
 string FEED     = "G1 ";
 string ARC_CW   = "G2 ";
 string ARC_CCW  = "G3 ";
-string DWELL    = "G4 " + PARAM + "%.0f" + EOL;
-//string DWELL    = EOL;
+string DWELL    = "G4 " + PARAM + "%f" + EOL;
 
 //
 // M codes
 //
-string SPINDLE_ON     = "M3" + EOL + DWELL;
-//string SPINDLE_ON     = "M3" + EOL;
-string SPINDLE_OFF    = "M4" + EOL;
-//string END_PROGRAM    = "M2" + EOL;
-string OPERATOR_PAUSE = "M6 ";
+string BEG_PROGRAM    = "M121"+ EOL +"M150 B255 P255 R255 U255";//disableendstop
+string SPINDLE_ON     = ""; //"M3" + EOL + DWELL;
+string SPINDLE_OFF    = "";//"M5" + EOL;
+string END_PROGRAM    = "M150 P255 U255";
+string OPERATOR_PAUSE = "M0 ";
 
 //
 // Spindle speed
 //
-//string SPINDLE_SPEED  = "S%.0f" + EOL;
-string SPINDLE_SPEED  = "";
+string SPINDLE_SPEED  = "S%.0f" + EOL;
 
 //
 // Coordinates
@@ -92,11 +90,6 @@ string FEED_MOVE_Z_WITH_RATE  = FEED + MOVE_Z   + FR_FORMAT;
 string FEED_MOVE_XYZ          = FEED + MOVE_XYZ;
 
 //
-// End Program Code
-//
-string END_PROGRAM    = RAPID_MOVE_XY_HOME + EOL;
-
-//
 // Drilling holes
 //
 // Not using G82 so it will be very generic.
@@ -119,9 +112,9 @@ string DRILL_HOLE =       RAPID + MOVE_XY + EOL
 // Tool change
 //
 string TOOL_CODE        = "T%02d ";
-string TOOL_MM_FORMAT   = "%1.3fmm";
+string TOOL_MM_FORMAT   = "%1.2fmm";
 string TOOL_INCH_FORMAT = "%1.4fin";
-string TOOL_CHANGE      = OPERATOR_PAUSE + TOOL_CODE + " ; " + FORMAT + EOL;
+string TOOL_CHANGE      = OPERATOR_PAUSE +"Set "+TOOL_CODE  + FORMAT + EOL;
 
 string TOOL_CHANGE_TABLE_HEADER = COMMENT_BEGIN + 
   " Tool|       Size       |  Min Sub |  Max Sub |   Count " + COMMENT_END + EOL;
